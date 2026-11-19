@@ -1,0 +1,5 @@
+.git
+bin/
+k8s/
+README.md
+Makefile

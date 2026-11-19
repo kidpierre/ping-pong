@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ping-pong-config
+data:
+  ping-interval: "2s"
+  pong-interval: "3s"

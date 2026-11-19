@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pong
+  labels:
+    app: pong
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pong
+  template:
+    metadata:
+      labels:
+        app: pong
+    spec:
+      containers:
+        - name: pong
+          image: pong:1.0
+          imagePullPolicy: IfNotPresent  # образ уже лежит в minikube, в registry за ним не ходим
+          env:
+            - name: PEER_URL
+              value: http://ping:8080
+            - name: INTERVAL
+              valueFrom:
+                configMapKeyRef:
+                  name: ping-pong-config
+                  key: pong-interval
+          ports:
+            - containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            periodSeconds: 10
+          resources:
+            requests:
+              cpu: 50m
+              memory: 32Mi
+            limits:
+              memory: 64Mi
